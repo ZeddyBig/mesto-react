@@ -1,0 +1,13 @@
+.popup-img__container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	margin: 90px auto auto;
+}
+
+@media screen and (max-width: 900px) {
+	.popup-img__container {
+		margin: auto;
+		max-width: 75%;
+	}
+}

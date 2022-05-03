@@ -1,0 +1,9 @@
+.popup__error-second {
+	font-size: 12px;
+    color: red;
+    opacity: 0;
+    position: absolute;
+    top: 60%;
+    left: 36px;
+    transition: 0.3s;
+}

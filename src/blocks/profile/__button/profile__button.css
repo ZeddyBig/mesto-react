@@ -1,0 +1,57 @@
+.profile__button {
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    margin: 0 30px 0 0;
+    position: relative;
+    transition: opacity ease 0.5s;
+    
+  }
+  
+.profile__button::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background: #000;
+    transition: opacity ease 0.5s;
+}
+  
+.profile__button::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background-image: url('../../../images/profile__button.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity ease 0.5s;
+    z-index: 2;
+}
+  
+.profile__button:hover::after {
+    opacity: 0.8;
+}
+  
+.profile__button:hover::before {
+    opacity: 1;
+}
+  
+.profile__button:hover {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+	.profile__button {
+		margin: 0 auto 26px;
+	}
+}
