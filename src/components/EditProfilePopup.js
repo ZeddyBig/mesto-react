@@ -8,11 +8,11 @@ function EditProfilePopup(props) {
     const [description, setDescription] = useState("");
     
     // Подписка на контекст
-    const currentUser = React.useContext(CurrentUserContext);
+    const currentUser = useContext(CurrentUserContext);
 
     // После загрузки текущего пользователя из API
     // его данные будут использованы в управляемых компонентах.
-    React.useEffect(() => {
+    useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about);
     }, [currentUser, props.isOpen]); 

@@ -9,27 +9,18 @@ import {api} from '../utils/api';
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 
 function App() {
 
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [currentUser, setCurrentUser] = useState({});
 
-  const [inputValueFirst, setInputValueFirst] = React.useState('');
-  const [inputValueSecond, setInputValueSecond] = React.useState('');
-
-  const handleInputFirst = (e) => {
-    setInputValueFirst(e.target.value);
-  }
-
-  const handleInputSecond = (e) => {
-    setInputValueSecond(e.target.value);
-  }
-
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState({});
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     api.getUserInfo()
@@ -81,10 +72,18 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  // Из Main.js
-  const [cards, setCards] = React.useState([]);
+  function handleAddCard(obj) {
+    api.addCard(obj)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err));
+  }
 
-  React.useEffect(() => {
+  // Из Main.js
+
+  useEffect(() => {
     api.getInitialCards()
       .then ((res) => {
         const cardInfo = res.map((cardData) => {
@@ -92,7 +91,8 @@ function App() {
             name: cardData.name,
             link: cardData.link,
             likes: cardData.likes,
-            _id: cardData._id
+            _id: cardData._id,
+            ownerId: cardData.owner._id
           }
         })
         setCards(cardInfo);
@@ -136,17 +136,12 @@ function App() {
             />
           <Footer/>
 
-          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
+          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
 
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
-          <PopupWithForm name={'add-element'} title='Новое место' buttonName={'Создать'} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
-            <input onChange={handleInputFirst} id="place-name" type="text" value={inputValueFirst} name="popup__container-line_theme_place-name" placeholder="Название" className="popup__container-line popup__container-line_theme_place-name popup__input" required minLength="2" maxLength="30"/>
-            <span id="error-place-name" className="popup__input-type-error popup__error-first popup__error popup__error_active"></span>
-            <input onChange={handleInputSecond} id="place-url" type="url" value={inputValueSecond} name="popup__container-line_theme_place-link" placeholder="Ссылка на картинку" required className="popup__container-line popup__container-line_theme_place-link popup__input"/>
-            <span id="error-place-url" className="popup__input-type-error popup__error-second popup__error popup__error_active"></span>
-          </PopupWithForm>
-
+          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddCard={handleAddCard} />
+          
           <PopupWithForm name={'delete-confirm'} title='Вы уверены?' buttonName={'Да'}/>
           
           <ImagePopup card={selectedCard} isOpen={isImagePopupOpen} onClose={closeAllPopups} />
