@@ -9,11 +9,11 @@ class Api {
         return res.ok ? res.json() : Promise.reject(res.status);
     }
 
-    getProfile() {
+    getUserInfo() {
         return fetch(`${this._baseUrl}/users/me`, {
             headers: this._headers
         })
-        .then(res => this._getResponseData(res))
+        .then(this._getResponseData)
     }
   
     getInitialCards() {
@@ -23,13 +23,13 @@ class Api {
         .then(res => this._getResponseData(res))
     }
 
-    editProfile(name, about) {
+    editProfile(info) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: "PATCH",
             headers: this._headers,
             body: JSON.stringify({
-                name,
-                about
+                name: info.name,
+                about: info.about
             })
         })
         .then(res => this._getResponseData(res))
@@ -71,12 +71,20 @@ class Api {
         .then(res => this._getResponseData(res))
     }
 
-    updateAvatar(avatar) {
+    changeLikeCardStatus(id, isLiked) {
+        return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+            method: `${isLiked ? 'DELETE' : 'PUT'}`,
+            headers: this._headers
+        })
+        .then(res => this._getResponseData(res))
+    }
+
+    updateAvatar(obj) {
         return fetch(`${this._baseUrl}/users/me/avatar`, {
             method: "PATCH",
             headers: this._headers,
             body: JSON.stringify({
-                avatar
+                avatar: obj.avatar
             })
         })
         .then(res => this._getResponseData(res))
